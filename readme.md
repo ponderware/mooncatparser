@@ -2,7 +2,7 @@
 ## Official MoonCat Generation Library for the MoonCatRescue Ethereum Smart Contract
 -----
 
-This library exports a single function `mooncatparser` which takes a 5 byte hex cat id and returns a 2D array of hex color values, or null for transparency.
+This library exports a single function `mooncatparser` which takes a 5 byte hex cat id and returns a 2D array of hex color value strings, or `null` for transparency.
 
 -----
 
@@ -40,7 +40,7 @@ function generateMoonCatImage(catId, size){
 (follow the installation instructions for the [node-canvas](https://github.com/Automattic/node-canvas) dependencies)
 
 ```bash
-$npm install mooncat canvas@2.0.0-alpha.2
+$ npm install mooncat canvas@2.0.0-alpha.2
 ```
 
 ```javascript
@@ -65,6 +65,13 @@ function generateMoonCatImage(catId, size){
   return canvas.toDataURL();
 }
 ```
+
+-----
+## Example Output
+
+The catId `0x00f9e605e3` represent the image:
+
+![0x00f9e605e3](example.png)
 
 -----
 
