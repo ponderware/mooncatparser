@@ -43,7 +43,7 @@ function generateMoonCatImage(catId, size){
 $npm install mooncat canvas@2.0.0-alpha.2
 ```
 
-```javascript``
+```javascript
 const Canvas = require('canvas');
 const mooncatparser = require("mooncatparser");
 
