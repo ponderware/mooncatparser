@@ -1,6 +1,6 @@
 # mooncat
-## Official MoonCat Generation Library for the MoonCatRescue Ethereum Smart Contract
------
+
+### Official MoonCat Generation Library for the MoonCatRescue Ethereum Smart Contract
 
 This library exports a single function `mooncatparser` which takes a 5 byte hex cat id and returns a 2D array of hex color value strings, or `null` for transparency.
 
@@ -67,6 +67,7 @@ function generateMoonCatImage(catId, size){
 ```
 
 -----
+
 ## Example Output
 
 The catId `0x00f9e605e3` represent the image:
