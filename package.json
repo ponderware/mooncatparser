@@ -1,0 +1,15 @@
+{
+    "name": "mooncatparser",
+    "version": "1.0.0",
+    "description": "Official MoonCat Generation Library for the MoonCatRescue Ethereum Smart Contract",
+    "main": "mooncatparser.js",
+    "scripts": {
+	"test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "ponderware ltd.",
+    "license": "SEE LICENSE IN license.txt",
+    "repository" :{
+	"type" : "git",
+	"url" : "https://github.com/ponderware/mooncatparser.git"
+    }
+}
