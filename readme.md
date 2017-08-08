@@ -70,7 +70,7 @@ function generateMoonCatImage(catId, size){
 
 ## Example Output
 
-The catId `0x00f9e605e3` represent the image:
+The catId `0x00f9e605e3` represents the image:
 
 ![0x00f9e605e3](example.png)
 
