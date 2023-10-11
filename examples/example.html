@@ -1,0 +1,82 @@
+<html>
+  <head> 
+    <style>
+        .cat {
+            border: 1px;
+            /* background-color: red; */
+            float: left;
+        }
+    </style>
+  </head>
+  <body>
+    
+    <input type="text" id="catId1" name="cat-id" placeholder="cat id" value="0x00d658d50b"></input> <br/>
+    <input type="text" id="catId2" name="cat-id" placeholder="cat id" value="0xff09000ca7"></input> <br/>
+    <input type="text" id="catId3" name="cat-id" placeholder="cat id" value="0x00538fa18c"></input><br/>
+    <br/>
+    <input type="button" id="btn-generate" onclick="handleClick()" value="Gen"></button>
+    <br/>
+    <br/>
+    <div id="container"></div>
+    <script src="../mooncatparser.js"></script>
+
+    <script>
+      function generateMoonCatImage(catId, size) {
+        size = size || 10;
+        var data = mooncatparser.getImageData(catId);
+        var canvas = document.createElement("canvas");
+        canvas.width = size * data.length;
+        canvas.height = size * data[1].length;
+        var ctx = canvas.getContext("2d");
+
+        for (var i = 0; i < data.length; i++) {
+          for (var j = 0; j < data[i].length; j++) {
+            var color = data[i][j];
+            if (color) {
+              ctx.fillStyle = color;
+              ctx.fillRect(i * size, j * size, size, size);
+            }
+          }
+        }
+        return canvas.toDataURL();
+      }
+      function createCat(id) {
+        var data = generateMoonCatImage(id,2);
+        var info = mooncatparser.getInfo(id);
+        console.log(info);
+
+        var img = document.createElement("img")
+        img.setAttribute("src", data);
+
+
+
+        var text = document.createElement("textarea");
+        text.setAttribute("rows", 25);
+        text.setAttribute("cols", 25);
+        text.innerHTML = JSON.stringify(info, null, 4);
+        // text.innerText = JSON.stringify(info);
+
+        var div = document.createElement("div");
+        div.className = "cat";
+        div.appendChild(img);
+        div.appendChild(document.createElement("br"));
+        div.appendChild(text);
+
+        var container = document.getElementById("container");
+        container.appendChild(div);
+
+      }
+
+    function handleClick() {
+        var catIdEls = document.getElementsByName("cat-id");
+        document.getElementById("container").innerHTML = '';
+        for(var i = 0; i < catIdEls.length; i++) {
+            var catId = catIdEls[i].value;
+            createCat(catId);
+        }
+    }
+    </script>
+  </body>
+</html>
+
+<!-- https://en.everybodywiki.com/MoonCats -->

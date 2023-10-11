@@ -126,51 +126,159 @@
 	}
 	return result;
     }
-
-    var mooncatparser = function (catId){
-	if(catId.slice(0,2) == "0x"){
-	    catId = catId.slice(2);
-	}
-	var bytes = hexToBytes(catId);
-	var genesis = bytes[0],
-	    k = bytes[1],
-	    r = bytes[2],
-	    g = bytes[3],
-	    b = bytes[4];
-
-	var size = size || 10;
-	var invert = k >= 128;
-	k = k % 128;
-	var design = designs[k].split(".");
-	var colors;
-	if(genesis){
-	    if(k % 2 === 0 && invert || k % 2 === 1 && !invert){
-		colors = [null, "#555555", "#d3d3d3", "#ffffff", "#aaaaaa", "#ff9999"];
-	    }else{
-		colors = [null, "#555555", "#222222", "#111111", "#bbbbbb", "#ff9999"];
-	    }
-	}else{
-	    colors = derivePalette(r, g, b, invert);
-	}
-
-	return design.map(function(row){
-	    return row.split("").map(function(cell){
-		return colors[cell];
-	    })
-	})
+	function toBinaryPad(number,len) {
+        var h = number.toString(2)
+        var rs = "0".repeat(len-h.length)+h;
+        return rs;
     }
 
+	function getMooncatInfo(catId) {	
+		let expressions = {
+		  '00': 'smiling',
+		  '01':'grumpy',
+		  '10': 'pouting',
+		  '11':'shy'
+		}
+	
+		let poses = {
+		  '00': 'standing',
+		  '01': 'sleeping',
+		  '10': 'poucing',
+		  '11': 'stalking'
+		};
+	
+		let coats = {
+		  '00': 'solid',
+		  '01': 'tabby',
+		  '10':'spotted',
+		  '11': 'tortie'
+		};
+		let directions = {
+		  '0': 'left',
+		  '1': 'right'
+		};
+
+			if (catId.slice(0, 2) == "0x") {
+		  catId = catId.slice(2);
+		}
+		var bytes = hexToBytes(catId);
+		var genesis = bytes[0],
+		k = bytes[1],
+		r = bytes[2],
+		g = bytes[3],
+		b = bytes[4];
+	
+	
+		let kB = toBinaryPad(k,8);
+	
+		let paleness = kB[0]==1;
+		let direction = directions[kB[1]];
+		let face = expressions[kB.substr(2, 2)];
+		let coat = coats[kB.substr(4,2)];
+		let pose = poses[kB.substr(6,2)]
+		let genesisColor = '';
+	
+		var hsl = RGBToHSL(r, g, b);
+		var rgb = [];
+		var h = hsl[0];
+	
+		var invert = k >= 128;
+		k = k % 128;
+
+		var hx = h % 360;
+		var hy = (h + 320) % 360;
+	
+		if (genesis) {
+		  if ((k % 2 === 0 && invert) || (k % 2 === 1 && !invert)) {
+			rgb = [255,255,255];
+			hsl = RGBToHSL(rgb[0], rgb[1], rgb[2]);
+			genesisColor = 'white'
+		  } else {
+			rgb = [17,17,17];
+			genesisColor = 'black';
+			hsl = RGBToHSL(rgb[0], rgb[1], rgb[2]);
+		  }
+		} else {
+   
+		  if (invert) {
+			hsl = [hy, 1, 0.8]
+			rgb = HSLToRGB(hsl);
+		  } else {
+			hsl = [hx, 1, 0.45]
+			rgb = HSLToRGB(hsl);
+		  }
+	
+		}
+	
+	
+		var colors = {
+		  rgb: rgb,
+		  hsl: hsl,
+		  hex: RGBToHex(rgb)
+		};
+	
+		return {
+		  catId,
+		  genesis: genesis == '255',
+		  genesisColor,
+		  coat,
+		  face,
+		  pose,
+		  paleness,
+		  direction,
+		  colors
+		}
+	  }
+	
+    var parse = function (catId){
+		if(catId.slice(0,2) == "0x"){
+			catId = catId.slice(2);
+		}
+		var bytes = hexToBytes(catId);
+		var genesis = bytes[0],
+			k = bytes[1],
+			r = bytes[2],
+			g = bytes[3],
+			b = bytes[4];
+
+		var size = size || 10;
+		var invert = k >= 128;
+		k = k % 128;
+		var design = designs[k].split(".");
+		var colors;
+		if(genesis){
+			if(k % 2 === 0 && invert || k % 2 === 1 && !invert){
+			colors = [null, "#555555", "#d3d3d3", "#ffffff", "#aaaaaa", "#ff9999"];
+			}else{
+			colors = [null, "#555555", "#222222", "#111111", "#bbbbbb", "#ff9999"];
+			}
+		}else{
+			colors = derivePalette(r, g, b, invert);
+		}
+
+		return design.map(function(row){
+			return row.split("").map(function(cell){
+			return colors[cell];
+			})
+		})
+    }
+
+	var mooncatparser = {
+			getImageData: parse,
+			getInfo: getMooncatInfo
+	}
+
     mooncatparser.noConflict = function(){
-	root.mooncatparser = prev_mooncatparser;
-	return mooncatparser;
+		root.mooncatparser = prev_mooncatparser;
+		return mooncatparser;
     }
 
     if( typeof exports !== 'undefined' ) {
-	if( typeof module !== 'undefined' && module.exports ) {
-	    exports = module.exports = mooncatparser;
-	}
-	exports.mooncatparser = mooncatparser;
+		if( typeof module !== 'undefined' && module.exports ) {
+			exports = module.exports = mooncatparser;
+		}
+		exports.mooncatparser = mooncatparser;
     } else {
-	root.mooncatparser = mooncatparser;
+		root.mooncatparser = mooncatparser;
     }
 }).call(this);

@@ -1,5 +1,53 @@
 # mooncatparser
+### SG-BYTE
+Add `getInfo` function to parse the cat info. Please take a look at `examples` for usage.
+```javascript
+  // Image data of a cat
+  var data = mooncatparser.getImageData(catId);
+  // Text data of a cat
+  var info = mooncatparser.getInfo(id);
+```
+### Cat info
+|Trail|Value|Desc|
+|--|--|--|
+|genesis|true/false|true = genesis cat. Check genesisColor to know the cat color|
+|genesisColor|black/white| this value is only available if the cat is a genesis cat|
+|coat|solid/tabby/spotted/tortie| fur pattern |
+|face| smiling/grumpy/pouting/shy | face expression|
+|pose| standing/sleeping/poucing/stalking  | pose |
+|paleness| true/false | color type |
+|direction| left/right| direction|
+|colors| colors is under 3 formats hsl, rgb and hex | color of the cat |
+|colors.hsl| \[h,s,l\] | color in hsl format |
+|colors.rgb| \[r,g,b\] | coror in rgb format |
+|colors.hex| | color in hex format|
 
+Example of the `catId=0x00d658d50b`:
+```json
+{
+    "catId": "00d658d50b",
+    "genesis": false,
+    "genesisColor": "",
+    "coat": "tabby",
+    "face": "grumpy",
+    "pose": "poucing",
+    "paleness": true,
+    "direction": "right",
+    "colors": {
+        "rgb": [
+            255,
+            250,
+            153
+        ],
+        "hsl": [
+            57.12871287128712,
+            1,
+            0.8
+        ],
+        "hex": "#fffa99"
+    }
+}
+```
 ### Official MoonCat Generation Library for the MoonCatRescue Ethereum Smart Contract
 
 This library exports a single function `mooncatparser` which takes a 5 byte hex `catId` and returns a 2D array of hex color value strings, or `null` for transparency.
